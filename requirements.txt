@@ -1,0 +1,16 @@
+# Dual-Agent PCG System Requirements
+# Based on arXiv:2512.10501
+
+# Core dependencies
+pydantic>=2.0.0
+
+# LLM Providers
+anthropic>=0.18.0  # Paper uses Claude 4.5 Sonnet
+openai>=1.0.0      # Alternative provider
+
+# Optional: Configuration
+pyyaml>=6.0
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# pytest-asyncio>=0.21.0

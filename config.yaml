@@ -1,0 +1,53 @@
+# Dual-Agent PCG System Configuration
+# Based on arXiv:2512.10501 Section 4.1 (Experimental Setup)
+
+# =============================================================================
+# LLM Configuration
+# =============================================================================
+# From paper: "We employ the Claude 4.5 Sonnet model via API for inference"
+llm:
+  provider: anthropic
+  model: claude-sonnet-4-20250514
+  max_tokens: 4096
+
+# =============================================================================
+# Agent Temperature Settings
+# =============================================================================
+# From paper:
+# - "To balance creativity with instruction adherence, the Actor's temperature is set to 0.4"
+# - "The Critic's temperature is set to 0.2 to ensure consistent and confident feedback"
+temperatures:
+  actor: 0.4
+  critic: 0.2
+
+# =============================================================================
+# Iteration Settings
+# =============================================================================
+# From paper: "The maximum number of iteration cycles is set to one for all trials"
+refinement:
+  max_iterations: 1
+  
+# =============================================================================
+# Context Management
+# =============================================================================
+# From paper Section 3.3: State-replacement strategy
+context:
+  buffer_size: 16000  # tokens
+
+# =============================================================================
+# Timeout and Retry Settings
+# =============================================================================
+timeouts:
+  actor_ms: 60000
+  critic_ms: 30000
+
+retries:
+  max_attempts: 3
+  backoff_base: 2.0
+
+# =============================================================================
+# Logging
+# =============================================================================
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
