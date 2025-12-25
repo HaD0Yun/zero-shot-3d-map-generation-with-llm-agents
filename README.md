@@ -4,6 +4,8 @@
 
 Based on [arXiv:2512.10501](https://arxiv.org/abs/2512.10501)
 
+**English** | [한국어](./README_KR.md)
+
 ## Overview
 
 This is a complete implementation of the Dual-Agent Actor-Critic architecture for zero-shot Procedural Content Generation (PCG) parameter configuration. The system enables off-the-shelf LLMs to interface with PCG tools without task-specific fine-tuning.
