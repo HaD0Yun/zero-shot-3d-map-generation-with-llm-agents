@@ -73,6 +73,81 @@ python -m dual_agent_pcg.main
 python -m dual_agent_pcg.main --mock
 ```
 
+---
+
+## OpenCode Integration (Recommended)
+
+**No API key required!** Use the Dual-Agent PCG system directly within OpenCode CLI.
+
+### Quick Setup
+
+1. Copy the `.opencode` directory to your user home:
+
+```bash
+# Windows
+xcopy /E /I .opencode %USERPROFILE%\.opencode
+
+# Linux/Mac
+cp -r .opencode ~/.opencode
+```
+
+2. Run OpenCode and use the `/Map` command:
+
+```bash
+opencode -c
+```
+
+```
+/Map volcanic island with central crater lake
+```
+
+### How It Works
+
+The OpenCode integration leverages the authenticated Claude session, eliminating the need for a separate API key:
+
+```
+User: /Map mountain terrain with 3 elevation zones
+         │
+         ▼
+    ┌─────────────────┐
+    │  Map.md Command │ ← Orchestrates the protocol
+    └────────┬────────┘
+             │
+    ┌────────┴────────┐
+    ▼                 ▼
+┌─────────┐     ┌─────────┐
+│  Actor  │     │ Critic  │
+│  Agent  │────▶│  Agent  │
+│ (t=0.4) │◀────│ (t=0.2) │
+└─────────┘     └─────────┘
+             │
+             ▼
+    JSON Parameter Output
+```
+
+### OpenCode Files Structure
+
+```
+.opencode/
+├── agent/
+│   ├── pcg-actor.yaml    # Actor agent (temperature: 0.4)
+│   └── pcg-critic.yaml   # Critic agent (temperature: 0.2)
+└── command/
+    └── Map.md            # Main slash command with API docs
+```
+
+### Comparison: Python API vs OpenCode
+
+| Feature | Python API | OpenCode |
+|---------|-----------|----------|
+| API Key Required | ✅ Yes | ❌ **No** |
+| Setup Complexity | pip install + env vars | Copy folder |
+| Temperature Control | ✅ 0.4/0.2 | ✅ 0.4/0.2 |
+| Token Tracking | Exact | Estimated |
+| Usage | Script/Code | `/Map` command |
+
+---
+
 ### Programmatic Usage
 
 ```python
@@ -115,14 +190,20 @@ asyncio.run(main())
 
 ```
 dual_agent_pcg/
-├── __init__.py           # Package initialization
-├── models.py             # Pydantic models (ActorOutput, CriticFeedback, etc.)
-├── prompts.py            # System prompts for Actor and Critic
-├── llm_providers.py      # LLM provider abstraction (Anthropic, OpenAI, Mock)
-├── orchestrator.py       # Algorithm 1 implementation
-├── main.py               # Runnable example
-├── config.yaml           # Configuration file
-└── requirements.txt      # Dependencies
+├── .opencode/                    # OpenCode integration (NEW!)
+│   ├── agent/
+│   │   ├── pcg-actor.yaml       # Actor agent config (t=0.4)
+│   │   └── pcg-critic.yaml      # Critic agent config (t=0.2)
+│   └── command/
+│       └── Map.md               # /Map slash command
+├── __init__.py                   # Package initialization
+├── models.py                     # Pydantic models (ActorOutput, CriticFeedback, etc.)
+├── prompts.py                    # System prompts for Actor and Critic
+├── llm_providers.py              # LLM provider abstraction (Anthropic, OpenAI, Mock)
+├── orchestrator.py               # Algorithm 1 implementation
+├── main.py                       # Runnable example
+├── config.yaml                   # Configuration file
+└── requirements.txt              # Dependencies
 ```
 
 ## Paper Configuration (Section 4.1)
