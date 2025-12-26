@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-shot 3D Map Generation with LLM Agents</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okadia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- SEO -->
+    <meta name="description" content="Zero-shot 3D Map Generation with LLM Agents: A Dual-Agent Architecture for Procedural Content Generation">
+    <meta name="keywords" content="LLM, 3D Generation, PCG, AI, Agents, Research">
+</head>
+<body>
+
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+        <a href="index.html" class="active">EN</a>
+        <span>|</span>
+        <a href="index-ko.html">한국어</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero is-light is-medium">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h1 class="title is-1 publication-title">
+                    Zero-shot 3D Map Generation <br> with LLM Agents
+                </h1>
+                <h3 class="subtitle is-3 publication-subtitle">
+                    A Dual-Agent Architecture for Procedural Content Generation
+                </h3>
+                
+                <div class="is-size-5 publication-authors">
+                    <span class="author-block">
+                        <a href="#">Lim Chien Her</a><sup>*</sup>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Ming Yan</a><sup>*</sup>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Yunshu Bai</a>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Ruihao Li</a>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Hao Zhang</a>
+                    </span>
+                </div>
+
+                <div class="is-size-6 publication-authors">
+                    <span class="author-block"><sup>*</sup>Equal Contribution</span>
+                </div>
+
+                <!-- Link Buttons -->
+                <div class="publication-links">
+                    <!-- arXiv Link -->
+                    <span class="link-block">
+                        <a href="https://arxiv.org/abs/2512.10501" class="button is-dark is-rounded is-normal">
+                            <span class="icon">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            <span>arXiv</span>
+                        </a>
+                    </span>
+                    <!-- Code Link -->
+                    <span class="link-block">
+                        <a href="https://github.com/HaD0Yun/zero-shot-3d-map-generation-with-llm-agents" class="button is-dark is-rounded is-normal">
+                            <span class="icon">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            <span>Code</span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Abstract Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content-block">
+                <h2 class="title is-3 has-text-centered">Abstract</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        Procedural Content Generation (PCG) typically requires specialized domain knowledge and complex parameter tuning. 
+                        We present a novel <strong>Zero-shot 3D Map Generation</strong> framework leveraging Large Language Model (LLM) agents 
+                        to democratize 3D terrain creation. Our system employs a <strong>Dual-Agent Architecture</strong> comprising an 
+                        Orchestrator, an Actor (creative generator), and a Critic (quality evaluator) to iteratively refine map parameters 
+                        based on simple natural language prompts.
+                    </p>
+                    <p>
+                        By integrating a context-aware feedback loop, our approach enables users to generate consistent, high-quality 
+                        3D maps without manual parameter adjustment. We demonstrate the system's capability to interpret abstract concepts 
+                        (e.g., "volcanic island") and translate them into concrete PCG parameters, achieving superior alignment with user intent 
+                        compared to traditional methods.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">System Architecture</h2>
+            <div class="content-block">
+                <div class="content has-text-justified">
+                    <p>
+                        The core pipeline consists of a User Prompt processed by an Orchestrator, which coordinates the interaction between 
+                        context management and the dual-agent system.
+                    </p>
+                </div>
+                <div class="architecture-container">
+                    <!-- Placeholder for the architecture SVG -->
+                    <img src="assets/images/architecture-diagram.svg" alt="Architecture Diagram" onerror="this.src='https://placehold.co/800x400?text=Architecture+Diagram';">
+                    <br><br>
+                    <p class="is-size-6 has-text-grey">
+                        Figure 1: The Dual-Agent Architecture flow. The Actor generates parameters (Temp 0.4), 
+                        and the Critic evaluates them (Temp 0.2) in a feedback loop.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="section has-background-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered mb-6">Key Features</h2>
+            <div class="columns is-centered">
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-magic"></i>
+                        </span>
+                        <h3 class="title is-4">Zero-shot Generation</h3>
+                        <p>Create complex 3D terrains from simple text descriptions without any prior training or examples.</p>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </span>
+                        <h3 class="title is-4">Dual-Agent System</h3>
+                        <p>Actor-Critic architecture ensures high fidelity. The Actor creates, and the Critic refines for quality.</p>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-terminal"></i>
+                        </span>
+                        <h3 class="title is-4">OpenCode Ready</h3>
+                        <p>Fully integrated with OpenCode CLI. Generate maps directly from your terminal environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Installation</h2>
+            <div class="content-block">
+                <p>Clone the repository and install the dependencies.</p>
+                <div class="language-bash">
+                    <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bash">git clone https://github.com/HaD0Yun/zero-shot-3d-map-generation-with-llm-agents.git
+cd zero-shot-3d-map-generation-with-llm-agents
+pip install -r requirements.txt
+
+# Set your API Key
+export ANTHROPIC_API_KEY=your-key-here</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Usage</h2>
+            <div class="content-block">
+                <div class="tabs is-toggle is-fullwidth">
+                    <ul>
+                        <li class="is-active" data-tab="python-usage">
+                            <a>
+                                <span class="icon is-small"><i class="fab fa-python"></i></span>
+                                <span>Python API</span>
+                            </a>
+                        </li>
+                        <li data-tab="opencode-usage">
+                            <a>
+                                <span class="icon is-small"><i class="fas fa-terminal"></i></span>
+                                <span>OpenCode CLI</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="python-usage" class="tab-content-box">
+                    <div class="language-python">
+                        <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-python">import asyncio
+from dual_agent_pcg.orchestrator import Orchestrator, SystemConfig
+
+async def main():
+    # Configure the dual-agent system
+    config = SystemConfig(
+        actor_temperature=0.4,
+        critic_temperature=0.2,
+        max_iterations=1
+    )
+    
+    # Initialize Orchestrator
+    orchestrator = Orchestrator(config=config, llm_provider=llm)
+    
+    # Generate Map
+    result = await orchestrator.execute("Create a mountain terrain...")
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                    </div>
+                </div>
+
+                <div id="opencode-usage" class="tab-content-box" style="display: none;">
+                    <div class="language-bash">
+                        <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bash"># 1. Copy .opencode folder to home directory
+cp -r .opencode ~/.opencode
+
+# 2. Run OpenCode in command mode
+opencode -c
+
+# 3. Use the Map command
+/Map volcanic island with central crater lake</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section class="section" id="citation">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">Citation</h2>
+            <div class="content-block bibtex-section">
+                <p>If you find this work useful for your research, please cite our paper:</p>
+                <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bibtex">@article{her2025zeroshot3dmap,
+  title={Zero-shot 3D Map Generation with LLM Agents: A Dual-Agent Architecture for Procedural Content Generation},
+  author={Her, Lim Chien and Yan, Ming and Bai, Yunshu and Li, Ruihao and Zhang, Hao},
+  journal={arXiv preprint arXiv:2512.10501},
+  year={2025}
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Zero-shot 3D Map Generation</strong> project page. 
+                <br>
+                Website template inspired by <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

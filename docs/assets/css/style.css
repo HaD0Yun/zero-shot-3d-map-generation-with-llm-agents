@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap');
+
+/* Global Variables & Resets */
+:root {
+  --primary-color: #3273dc; /* Bulma blue */
+  --academic-blue: #209cee;
+  --dark-text: #2c3e50;
+  --light-bg: #f5f5f5;
+  --code-bg: #2d2d2d;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  color: var(--dark-text);
+  letter-spacing: -0.02em;
+}
+
+/* Hero Section */
+.hero-body {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.title.is-1 {
+  font-size: 3.5rem;
+  background: -webkit-linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.subtitle.is-3 {
+  font-weight: 300;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.author-block {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.author-block a {
+  color: #3273dc;
+  border-bottom: 1px dashed #3273dc;
+  transition: all 0.2s ease;
+}
+
+.author-block a:hover {
+  border-bottom-style: solid;
+  color: #1a2a6c;
+}
+
+.publication-links {
+  margin-top: 2rem;
+}
+
+.link-block {
+  margin: 0 5px;
+  display: inline-block;
+}
+
+/* Main Content Containers */
+.container.is-max-desktop {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.section {
+  padding: 3rem 1.5rem;
+}
+
+.content-block {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Feature Cards */
+.feature-card {
+  height: 100%;
+  padding: 2rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  color: var(--academic-blue);
+  margin-bottom: 1rem;
+}
+
+/* Tabs Override */
+.tabs.is-toggle li.is-active a {
+  background-color: var(--academic-blue);
+  border-color: var(--academic-blue);
+}
+
+/* Code Blocks & Terminal */
+pre {
+  background-color: #272822 !important; /* Monokai-ish */
+  border-radius: 8px;
+  position: relative;
+  padding-top: 2.5rem !important;
+  color: #f8f8f2;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+
+.copy-button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* BibTeX */
+.bibtex-section pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+}
+
+/* Language Toggle */
+.lang-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.lang-toggle a {
+  color: #aaa;
+  padding: 0 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.lang-toggle a.active {
+  color: #333;
+}
+
+.lang-toggle span {
+  color: #ddd;
+}
+
+/* Architecture Diagram Placeholder */
+.architecture-container {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+.architecture-container img {
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .title.is-1 {
+    font-size: 2.5rem;
+  }
+  .section {
+    padding: 2rem 1rem;
+  }
+  .content-block {
+    padding: 1.5rem;
+  }
+}

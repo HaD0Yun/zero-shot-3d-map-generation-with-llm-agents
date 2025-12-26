@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM 에이전트를 활용한 Zero-shot 3D 맵 생성</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okadia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- SEO -->
+    <meta name="description" content="LLM 에이전트를 활용한 Zero-shot 3D 맵 생성: 절차적 콘텐츠 생성을 위한 이중 에이전트 아키텍처">
+    <meta name="keywords" content="LLM, 3D 생성, PCG, 인공지능, 에이전트, 연구">
+</head>
+<body>
+
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+        <a href="index.html">EN</a>
+        <span>|</span>
+        <a href="index-ko.html" class="active">한국어</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero is-light is-medium">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h1 class="title is-1 publication-title">
+                    LLM 에이전트를 활용한 <br> Zero-shot 3D 맵 생성
+                </h1>
+                <h3 class="subtitle is-3 publication-subtitle">
+                    절차적 콘텐츠 생성을 위한 이중 에이전트 아키텍처
+                </h3>
+                
+                <div class="is-size-5 publication-authors">
+                    <span class="author-block">
+                        <a href="#">Lim Chien Her</a><sup>*</sup>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Ming Yan</a><sup>*</sup>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Yunshu Bai</a>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Ruihao Li</a>,
+                    </span>
+                    <span class="author-block">
+                        <a href="#">Hao Zhang</a>
+                    </span>
+                </div>
+
+                <div class="is-size-6 publication-authors">
+                    <span class="author-block"><sup>*</sup>공동 1저자</span>
+                </div>
+
+                <!-- Link Buttons -->
+                <div class="publication-links">
+                    <!-- arXiv Link -->
+                    <span class="link-block">
+                        <a href="https://arxiv.org/abs/2512.10501" class="button is-dark is-rounded is-normal">
+                            <span class="icon">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            <span>arXiv</span>
+                        </a>
+                    </span>
+                    <!-- Code Link -->
+                    <span class="link-block">
+                        <a href="https://github.com/HaD0Yun/zero-shot-3d-map-generation-with-llm-agents" class="button is-dark is-rounded is-normal">
+                            <span class="icon">
+                                <i class="fab fa-github"></i>
+                            </span>
+                            <span>Code</span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Abstract Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content-block">
+                <h2 class="title is-3 has-text-centered">초록 (Abstract)</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        절차적 콘텐츠 생성(PCG)은 일반적으로 전문적인 도메인 지식과 복잡한 파라미터 튜닝을 필요로 합니다. 
+                        우리는 3D 지형 생성을 누구나 쉽게 할 수 있도록 돕기 위해 거대 언어 모델(LLM) 에이전트를 활용한 새로운 
+                        <strong>Zero-shot 3D 맵 생성</strong> 프레임워크를 제안합니다. 우리 시스템은 
+                        오케스트레이터(Orchestrator), 창의적 생성자인 액터(Actor), 품질 평가자인 크리틱(Critic)으로 구성된 
+                        <strong>이중 에이전트 아키텍처(Dual-Agent Architecture)</strong>를 사용하여, 
+                        간단한 자연어 프롬프트를 기반으로 맵 파라미터를 반복적으로 정제합니다.
+                    </p>
+                    <p>
+                        문맥 인식 피드백 루프를 통합함으로써, 사용자는 수동으로 파라미터를 조절할 필요 없이 일관되고 
+                        고품질의 3D 맵을 생성할 수 있습니다. 우리는 이 시스템이 "화산섬"과 같은 추상적인 개념을 구체적인 
+                        PCG 파라미터로 해석하고 변환하는 능력을 입증하였으며, 기존 방식에 비해 사용자 의도에 더욱 부합하는 
+                        결과물을 보여줍니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">시스템 아키텍처</h2>
+            <div class="content-block">
+                <div class="content has-text-justified">
+                    <p>
+                        핵심 파이프라인은 오케스트레이터(Orchestrator)가 처리하는 사용자 프롬프트로부터 시작되며, 
+                        오케스트레이터는 문맥 관리(Context Manager)와 이중 에이전트 시스템 간의 상호 작용을 조정합니다.
+                    </p>
+                </div>
+                <div class="architecture-container">
+                    <!-- Placeholder for the architecture SVG -->
+                    <img src="assets/images/architecture-diagram.svg" alt="아키텍처 다이어그램" onerror="this.src='https://placehold.co/800x400?text=Architecture+Diagram';">
+                    <br><br>
+                    <p class="is-size-6 has-text-grey">
+                        그림 1: 이중 에이전트 아키텍처 흐름도. 액터(Actor)가 파라미터를 생성하고(Temp 0.4), 
+                        크리틱(Critic)이 이를 평가하는(Temp 0.2) 피드백 루프를 보여줍니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="section has-background-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered mb-6">주요 기능</h2>
+            <div class="columns is-centered">
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-magic"></i>
+                        </span>
+                        <h3 class="title is-4">Zero-shot 생성</h3>
+                        <p>사전 학습이나 예제 없이 간단한 텍스트 설명만으로 복잡한 3D 지형을 생성합니다.</p>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </span>
+                        <h3 class="title is-4">이중 에이전트 시스템</h3>
+                        <p>액터-크리틱 아키텍처를 통해 높은 충실도를 보장합니다. 액터는 생성하고, 크리틱은 품질을 위해 정제합니다.</p>
+                    </div>
+                </div>
+                <div class="column is-4">
+                    <div class="feature-card has-text-centered">
+                        <span class="icon feature-icon">
+                            <i class="fas fa-terminal"></i>
+                        </span>
+                        <h3 class="title is-4">OpenCode 통합</h3>
+                        <p>OpenCode CLI와 완벽하게 통합되어 있습니다. 터미널 환경에서 직접 맵을 생성하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">설치 (Installation)</h2>
+            <div class="content-block">
+                <p>리포지토리를 복제하고 의존성을 설치합니다.</p>
+                <div class="language-bash">
+                    <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bash">git clone https://github.com/HaD0Yun/zero-shot-3d-map-generation-with-llm-agents.git
+cd zero-shot-3d-map-generation-with-llm-agents
+pip install -r requirements.txt
+
+# API 키 설정
+export ANTHROPIC_API_KEY=your-key-here</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">사용법 (Usage)</h2>
+            <div class="content-block">
+                <div class="tabs is-toggle is-fullwidth">
+                    <ul>
+                        <li class="is-active" data-tab="python-usage">
+                            <a>
+                                <span class="icon is-small"><i class="fab fa-python"></i></span>
+                                <span>Python API</span>
+                            </a>
+                        </li>
+                        <li data-tab="opencode-usage">
+                            <a>
+                                <span class="icon is-small"><i class="fas fa-terminal"></i></span>
+                                <span>OpenCode CLI</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="python-usage" class="tab-content-box">
+                    <div class="language-python">
+                        <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-python">import asyncio
+from dual_agent_pcg.orchestrator import Orchestrator, SystemConfig
+
+async def main():
+    # 이중 에이전트 시스템 설정
+    config = SystemConfig(
+        actor_temperature=0.4,
+        critic_temperature=0.2,
+        max_iterations=1
+    )
+    
+    # 오케스트레이터 초기화
+    orchestrator = Orchestrator(config=config, llm_provider=llm)
+    
+    # 맵 생성 실행
+    result = await orchestrator.execute("Create a mountain terrain...")
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                    </div>
+                </div>
+
+                <div id="opencode-usage" class="tab-content-box" style="display: none;">
+                    <div class="language-bash">
+                        <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bash"># 1. .opencode 폴더를 홈 디렉토리로 복사
+cp -r .opencode ~/.opencode
+
+# 2. OpenCode 커맨드 모드 실행
+opencode -c
+
+# 3. Map 명령어 사용
+/Map volcanic island with central crater lake</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section class="section" id="citation">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3">인용 (Citation)</h2>
+            <div class="content-block bibtex-section">
+                <p>이 연구가 유용하셨다면, 아래의 BibTeX를 사용하여 인용해 주세요:</p>
+                <pre><button class="copy-button"><i class="far fa-copy"></i></button><code class="language-bibtex">@article{her2025zeroshot3dmap,
+  title={Zero-shot 3D Map Generation with LLM Agents: A Dual-Agent Architecture for Procedural Content Generation},
+  author={Her, Lim Chien and Yan, Ming and Bai, Yunshu and Li, Ruihao and Zhang, Hao},
+  journal={arXiv preprint arXiv:2512.10501},
+  year={2025}
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Zero-shot 3D Map Generation</strong> 프로젝트 페이지. 
+                <br>
+                웹사이트 템플릿은 <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>에서 영감을 받았습니다.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

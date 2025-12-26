@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="orchestratorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.1"/>
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.1"/>
+    </linearGradient>
+    <linearGradient id="actorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe"/>
+      <stop offset="100%" style="stop-color:#00f2fe"/>
+    </linearGradient>
+    <linearGradient id="criticGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b"/>
+      <stop offset="100%" style="stop-color:#38f9d7"/>
+    </linearGradient>
+    <linearGradient id="contextGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fa709a"/>
+      <stop offset="100%" style="stop-color:#fee140"/>
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.15"/>
+    </filter>
+    
+    <!-- Arrow marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4facfe"/>
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#43e97b"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#fafbfc"/>
+  
+  <!-- User Prompt Input -->
+  <g transform="translate(400, 30)">
+    <rect x="-100" y="0" width="200" height="40" rx="20" fill="#374151" filter="url(#shadow)"/>
+    <text x="0" y="26" text-anchor="middle" fill="white" font-size="14" font-weight="500">User Prompt (P_user)</text>
+  </g>
+  
+  <!-- Arrow from User to Orchestrator -->
+  <line x1="400" y1="70" x2="400" y2="100" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Orchestrator Container -->
+  <rect x="50" y="110" width="700" height="440" rx="16" fill="url(#orchestratorGrad)" stroke="#667eea" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="400" y="140" text-anchor="middle" fill="#667eea" font-size="18" font-weight="700">ORCHESTRATOR</text>
+  
+  <!-- Context Manager -->
+  <g transform="translate(400, 180)">
+    <rect x="-280" y="0" width="560" height="70" rx="12" fill="white" stroke="url(#contextGrad)" stroke-width="2" filter="url(#shadow)"/>
+    <text x="0" y="28" text-anchor="middle" fill="#374151" font-size="16" font-weight="600">CONTEXT MANAGER</text>
+    <text x="0" y="50" text-anchor="middle" fill="#6b7280" font-size="12">State-Replacement Strategy • API Documentation • Usage Examples</text>
+  </g>
+  
+  <!-- Arrow from Context Manager to Agents -->
+  <line x1="400" y1="260" x2="400" y2="290" stroke="#6b7280" stroke-width="2"/>
+  <line x1="400" y1="290" x2="250" y2="290" stroke="#6b7280" stroke-width="2"/>
+  <line x1="400" y1="290" x2="550" y2="290" stroke="#6b7280" stroke-width="2"/>
+  <line x1="250" y1="290" x2="250" y2="310" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="290" x2="550" y2="310" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Actor Agent -->
+  <g transform="translate(250, 320)">
+    <rect x="-120" y="0" width="240" height="120" rx="12" fill="white" stroke="url(#actorGrad)" stroke-width="3" filter="url(#shadow)"/>
+    <rect x="-120" y="0" width="240" height="35" rx="12" fill="url(#actorGrad)"/>
+    <rect x="-120" y="20" width="240" height="15" fill="url(#actorGrad)"/>
+    <text x="0" y="24" text-anchor="middle" fill="white" font-size="14" font-weight="700">ACTOR AGENT</text>
+    <text x="0" y="55" text-anchor="middle" fill="#374151" font-size="13" font-weight="500">Semantic Interpreter</text>
+    <text x="0" y="80" text-anchor="middle" fill="#6b7280" font-size="12">Translates NL → Parameters</text>
+    <rect x="-50" y="92" width="100" height="22" rx="11" fill="#e0f2fe"/>
+    <text x="0" y="107" text-anchor="middle" fill="#0369a1" font-size="11" font-weight="600">Temp: 0.4</text>
+  </g>
+  
+  <!-- Critic Agent -->
+  <g transform="translate(550, 320)">
+    <rect x="-120" y="0" width="240" height="120" rx="12" fill="white" stroke="url(#criticGrad)" stroke-width="3" filter="url(#shadow)"/>
+    <rect x="-120" y="0" width="240" height="35" rx="12" fill="url(#criticGrad)"/>
+    <rect x="-120" y="20" width="240" height="15" fill="url(#criticGrad)"/>
+    <text x="0" y="24" text-anchor="middle" fill="white" font-size="14" font-weight="700">CRITIC AGENT</text>
+    <text x="0" y="55" text-anchor="middle" fill="#374151" font-size="13" font-weight="500">Static Verifier</text>
+    <text x="0" y="80" text-anchor="middle" fill="#6b7280" font-size="12">5-Dimension Review</text>
+    <rect x="-50" y="92" width="100" height="22" rx="11" fill="#d1fae5"/>
+    <text x="0" y="107" text-anchor="middle" fill="#047857" font-size="11" font-weight="600">Temp: 0.2</text>
+  </g>
+  
+  <!-- Bidirectional arrows between Actor and Critic -->
+  <g>
+    <!-- Actor to Critic (S_i) -->
+    <line x1="370" y1="360" x2="430" y2="360" stroke="#4facfe" stroke-width="2" marker-end="url(#arrowheadBlue)"/>
+    <rect x="385" y="345" width="30" height="18" rx="4" fill="#e0f2fe"/>
+    <text x="400" y="358" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="600">S_i</text>
+    
+    <!-- Critic to Actor (Feedback) -->
+    <line x1="430" y1="400" x2="370" y2="400" stroke="#43e97b" stroke-width="2" marker-end="url(#arrowheadGreen)"/>
+    <rect x="375" y="405" width="50" height="18" rx="4" fill="#d1fae5"/>
+    <text x="400" y="418" text-anchor="middle" fill="#047857" font-size="10" font-weight="600">Feedback</text>
+  </g>
+  
+  <!-- Decision Diamond -->
+  <g transform="translate(400, 480)">
+    <polygon points="0,-30 50,0 0,30 -50,0" fill="white" stroke="#6b7280" stroke-width="2" filter="url(#shadow)"/>
+    <text x="0" y="5" text-anchor="middle" fill="#374151" font-size="12" font-weight="600">Approve?</text>
+  </g>
+  
+  <!-- Arrow from Agents to Decision -->
+  <line x1="400" y1="440" x2="400" y2="450" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Yes branch -->
+  <g>
+    <line x1="350" y1="480" x2="280" y2="480" stroke="#22c55e" stroke-width="2"/>
+    <line x1="280" y1="480" x2="280" y2="530" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowheadGreen)"/>
+    <text x="310" y="472" fill="#22c55e" font-size="12" font-weight="600">Yes</text>
+    <rect x="220" y="535" width="120" height="35" rx="8" fill="#22c55e" filter="url(#shadow)"/>
+    <text x="280" y="558" text-anchor="middle" fill="white" font-size="13" font-weight="600">RETURN S_i</text>
+  </g>
+  
+  <!-- No branch -->
+  <g>
+    <line x1="450" y1="480" x2="520" y2="480" stroke="#ef4444" stroke-width="2"/>
+    <line x1="520" y1="480" x2="520" y2="530" stroke="#ef4444" stroke-width="2"/>
+    <text x="480" y="472" fill="#ef4444" font-size="12" font-weight="600">No</text>
+    <rect x="460" y="535" width="120" height="35" rx="8" fill="#f97316" filter="url(#shadow)"/>
+    <text x="520" y="558" text-anchor="middle" fill="white" font-size="13" font-weight="600">ITERATE</text>
+    
+    <!-- Loop back arrow -->
+    <line x1="580" y1="552" x2="620" y2="552" stroke="#f97316" stroke-width="2"/>
+    <line x1="620" y1="552" x2="620" y2="260" stroke="#f97316" stroke-width="2" stroke-dasharray="5 3"/>
+    <line x1="620" y1="260" x2="400" y2="260" stroke="#f97316" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Output label -->
+  <g transform="translate(400, 585)">
+    <text x="0" y="0" text-anchor="middle" fill="#374151" font-size="14" font-weight="600">RefinementResult (S_final)</text>
+  </g>
+</svg>
