@@ -302,6 +302,81 @@ User: /Map mountain terrain with 3 elevation zones
 
 ---
 
+### 🔄 Iterative Refinement Workflow (Manual Loop)
+
+The system generates PCG parameters, but **actual map generation requires your PCG tool** (e.g., TileWorldCreator). Since tool configurations vary per user, the visual feedback loop is manual:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    ITERATIVE REFINEMENT WORKFLOW                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  Step 1: Initial Parameter Generation                               │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  /Map [reference_image.png]                                  │   │
+│  │  or                                                          │   │
+│  │  /Map "volcanic island with crater lake"                     │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                              │                                       │
+│                              ▼                                       │
+│                    JSON Parameters Output                            │
+│                              │                                       │
+│                              ▼                                       │
+│  Step 2: Apply to Your PCG Tool (Manual)                            │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  Unity + TileWorldCreator                                    │   │
+│  │  - Copy parameters to your generator                         │   │
+│  │  - Execute map generation                                    │   │
+│  │  - Take screenshot of result                                 │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                              │                                       │
+│                              ▼                                       │
+│  Step 3: Feedback & Refinement                                      │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  /Map [result_screenshot.png]                                │   │
+│  │  "Previous params: {...}, Issue: mountains too low"          │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                              │                                       │
+│                              ▼                                       │
+│                    Refined Parameters                                │
+│                              │                                       │
+│                              ▼                                       │
+│                    Repeat until satisfied                            │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+#### Why Manual Loop?
+
+> **Tool settings differ per user.** Each user has their own PCG tool configuration, asset library, and Unity project setup. The system cannot automatically execute tools because:
+> - TileWorldCreator API differs by version
+> - Custom tool configurations vary
+> - Asset paths are user-specific
+> - Unity project structures differ
+>
+> The Dual-Agent system focuses on **parameter generation**, leaving execution to your environment.
+
+#### Example Workflow
+
+```bash
+# 1. Generate initial parameters from reference image
+/Map ~/reference/mountain_village.png
+
+# 2. Apply generated JSON to TileWorldCreator (manual)
+#    → Generate map → Screenshot result
+
+# 3. Refine based on result
+/Map ~/screenshots/attempt1.png "mountains need more height variation"
+
+# 4. Apply refined parameters (manual)
+#    → Generate map → Screenshot result
+
+# 5. Continue until satisfied
+/Map ~/screenshots/attempt2.png "add more trees on slopes"
+```
+
+---
+
 ### Programmatic Usage
 
 ```python
