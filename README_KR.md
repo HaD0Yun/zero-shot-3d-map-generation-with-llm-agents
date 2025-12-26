@@ -4,7 +4,7 @@
 
 [arXiv:2512.10501](https://arxiv.org/abs/2512.10501) 논문 기반
 
-🌐 **[프로젝트 페이지](https://had0yun.github.io/zero-shot-3d-map-generation-with-llm-agents/index-ko.html)** | 📄 [arXiv 논문](https://arxiv.org/abs/2512.10501) | 🤗 [Hugging Face](https://huggingface.co/spaces/HaDoYun/zero-shot-3d-map-generation-with-llm-agents)
+🌐 **[프로젝트 페이지](https://had0yun.github.io/zero-shot-3d-map-generation-with-llm-agents/index-ko.html)** | 📄 [arXiv 논문](https://arxiv.org/abs/2512.10501)
 
 [English](./README.md) | **한국어**
 
