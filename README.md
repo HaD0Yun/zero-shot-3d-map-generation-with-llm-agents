@@ -302,78 +302,94 @@ User: /Map mountain terrain with 3 elevation zones
 
 ---
 
-### 🔄 Iterative Refinement Workflow (Manual Loop)
+### 🔄 Automated Visual Feedback Loop (Unity MCP Integration)
 
-The system generates PCG parameters, but **actual map generation requires your PCG tool** (e.g., TileWorldCreator). Since tool configurations vary per user, the visual feedback loop is manual:
+The system now supports **fully automated refinement** when Unity MCP is available. The entire loop—parameter generation, map execution, screenshot capture, and visual comparison—runs automatically:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                    ITERATIVE REFINEMENT WORKFLOW                     │
+│              AUTOMATED VISUAL FEEDBACK LOOP (4 PHASES)              │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│  Step 1: Initial Parameter Generation                               │
+│  Phase 1: Parameter Generation (Dual-Agent)                         │
 │  ┌──────────────────────────────────────────────────────────────┐   │
 │  │  /Map [reference_image.png]                                  │   │
-│  │  or                                                          │   │
-│  │  /Map "volcanic island with crater lake"                     │   │
+│  │  → Actor Agent (t=0.4): Generate initial parameters          │   │
+│  │  → Critic Agent (t=0.2): Validate and refine                 │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                              │                                       │
 │                              ▼                                       │
-│                    JSON Parameters Output                            │
-│                              │                                       │
-│                              ▼                                       │
-│  Step 2: Apply to Your PCG Tool (Manual)                            │
+│  Phase 2: Automated Execution (Unity MCP)                           │
 │  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Unity + TileWorldCreator                                    │   │
-│  │  - Copy parameters to your generator                         │   │
-│  │  - Execute map generation                                    │   │
-│  │  - Take screenshot of result                                 │   │
+│  │  → Apply parameters to TileWorldCreator via MCP              │   │
+│  │  → Execute map generation automatically                      │   │
+│  │  → No manual intervention required                           │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                              │                                       │
 │                              ▼                                       │
-│  Step 3: Feedback & Refinement                                      │
+│  Phase 3: Visual Comparison (Dual-Agent)                            │
 │  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  /Map [result_screenshot.png]                                │   │
-│  │  "Previous params: {...}, Issue: mountains too low"          │   │
+│  │  → Capture screenshot via Unity MCP                          │   │
+│  │  → Comparison Actor: Analyze original vs generated           │   │
+│  │  → Comparison Critic: Validate similarity assessment         │   │
+│  │  → Output: Similarity score (0-100%)                         │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                              │                                       │
 │                              ▼                                       │
-│                    Refined Parameters                                │
-│                              │                                       │
-│                              ▼                                       │
-│                    Repeat until satisfied                            │
+│  Phase 4: Auto-Refinement Decision                                  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  If similarity ≥ 80%: ✅ Complete - Output final parameters  │   │
+│  │  If similarity < 80%: 🔄 Auto-refine and repeat (max 3x)     │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 │                                                                      │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Why Manual Loop?
+#### Requirements for Automated Loop
 
-> **Tool settings differ per user.** Each user has their own PCG tool configuration, asset library, and Unity project setup. The system cannot automatically execute tools because:
-> - TileWorldCreator API differs by version
-> - Custom tool configurations vary
-> - Asset paths are user-specific
-> - Unity project structures differ
->
-> The Dual-Agent system focuses on **parameter generation**, leaving execution to your environment.
+| Requirement | Description |
+|-------------|-------------|
+| **Unity MCP** | Must be installed and configured ([Unity MCP Setup](https://github.com/anthropics/unity-mcp)) |
+| **TileWorldCreator** | Unity plugin for procedural terrain generation |
+| **Unity Project** | Open with TileWorldCreator scene loaded |
 
-#### Example Workflow
+#### How It Works
+
+1. **You provide**: Reference image or text description
+2. **System handles**: Parameter generation → Execution → Screenshot → Comparison → Refinement
+3. **You receive**: Final optimized parameters (similarity ≥ 80% or best after 3 iterations)
+
+#### Fallback: Manual Mode
+
+If Unity MCP is not available, the system falls back to **manual mode**:
+- Generates parameters only
+- User manually applies to PCG tool
+- User provides result screenshot for refinement
+
+#### Example Usage
 
 ```bash
-# 1. Generate initial parameters from reference image
+# Fully automated (with Unity MCP)
 /Map ~/reference/mountain_village.png
+# → System automatically generates, executes, compares, and refines
+# → Final output: Optimized JSON parameters
 
-# 2. Apply generated JSON to TileWorldCreator (manual)
-#    → Generate map → Screenshot result
-
-# 3. Refine based on result
-/Map ~/screenshots/attempt1.png "mountains need more height variation"
-
-# 4. Apply refined parameters (manual)
-#    → Generate map → Screenshot result
-
-# 5. Continue until satisfied
-/Map ~/screenshots/attempt2.png "add more trees on slopes"
+# Manual fallback (without Unity MCP)
+/Map ~/reference/mountain_village.png
+# → System generates parameters
+# → User applies manually, provides screenshot
+/Map ~/screenshots/attempt1.png "refine: mountains need more height"
 ```
+
+#### Similarity Threshold
+
+| Score | Action |
+|-------|--------|
+| **≥ 80%** | ✅ Accept - Parameters considered optimal |
+| **60-79%** | 🔄 Auto-refine - Adjust parameters and regenerate |
+| **< 60%** | 🔄 Major refinement - Significant parameter changes |
+
+The system automatically iterates up to **3 times** before returning the best result.
 
 ---
 
