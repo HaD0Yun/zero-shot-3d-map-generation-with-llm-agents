@@ -61,3 +61,31 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs[0].click();
     }
 });
+
+// --- Copy Full Prompt Function (Global) ---
+async function copyFullPrompt() {
+    const promptElement = document.getElementById('full-prompt');
+    const code = promptElement.querySelector('code');
+    const text = code.innerText;
+    
+    try {
+        await navigator.clipboard.writeText(text);
+        
+        // Find the button
+        const btn = document.querySelector('.copy-prompt-btn');
+        const originalHTML = btn.innerHTML;
+        
+        btn.innerHTML = '<span class="icon"><i class="fas fa-check"></i></span><span>Copied!</span>';
+        btn.classList.remove('is-primary');
+        btn.classList.add('is-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('is-success');
+            btn.classList.add('is-primary');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy prompt: ', err);
+        alert('Failed to copy. Please select and copy manually.');
+    }
+}
