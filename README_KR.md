@@ -6,7 +6,7 @@
 
 🌐 **[프로젝트 페이지](https://had0yun.github.io/zero-shot-3d-map-generation-with-llm-agents/index-ko.html)** | 📄 [arXiv 논문](https://arxiv.org/abs/2512.10501)
 
-[English](./README.md) | **한국어**
+[English](./README.md) | **한국어** | [中文](./README_CN.md)
 
 ## 개요
 
