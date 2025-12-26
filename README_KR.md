@@ -84,6 +84,156 @@ python -m dual_agent_pcg.main --mock
 
 ---
 
+## 🚀 빠른 시작 - 프롬프트만 복사하세요!
+
+**설정하기 귀찮으신가요?** 아래 프롬프트를 복사해서 좋아하는 LLM CLI (Claude, ChatGPT 등)에 붙여넣기만 하세요. `$ARGUMENTS`를 원하는 맵 설명으로 바꾸면 끝!
+
+<details>
+<summary><strong>📋 전체 프롬프트 보기 (클릭)</strong></summary>
+
+```markdown
+# Dual-Agent PCG Map Generation
+
+You are executing the **Zero-shot Dual-Agent PCG Refinement Protocol** (arXiv:2512.10501).
+
+## User Request (P_user)
+
+**Map Description**: $ARGUMENTS
+
+---
+
+## Protocol
+
+You will alternate between two roles until convergence (max 3 iterations):
+
+### ACTOR ROLE (Semantic Interpreter)
+Generate a Parameter Trajectory Sequence as JSON. You must:
+- Translate the user's intent into specific PCG tool configurations
+- Include concrete parameter values (NO placeholders like "TBD")
+- Ground all tool names and parameters in the API Documentation below
+- Identify risks and assumptions
+
+### CRITIC ROLE (Static Verifier)  
+Review the trajectory against documentation. Apply the 5-dimension framework:
+1. **Tool Selection**: Does each tool exist exactly as named?
+2. **Parameter Correctness**: All required params present? Values in valid range?
+3. **Logic & Sequence**: Generators before modifiers? Dependencies satisfied?
+4. **Goal Alignment**: Does trajectory achieve user's requirements?
+5. **Completeness**: Any missing steps?
+
+**CONSERVATIVE POLICY**: Only flag issues you're CERTAIN about.
+
+---
+
+## Execution Flow
+
+1. [ACTOR] Generate initial trajectory S₀
+2. [CRITIC] Review S₀ → produce feedback
+3. IF issues found AND iteration < 3:
+   [ACTOR] Revise trajectory based on feedback → S₁
+   [CRITIC] Review S₁
+   ... repeat until approved or max iterations
+4. Output final approved trajectory
+
+---
+
+## API Documentation (D)
+
+### Generators (must be called before modifiers)
+
+#### CellularAutomataGenerator
+Creates organic landmass patterns. Ideal for islands, continents, caves.
+
+**Required Parameters:**
+- `width` (int): Grid width [16, 256]
+- `height` (int): Grid height [16, 256]  
+- `fill_probability` (float): Initial fill [0.0, 1.0]
+  - 0.3-0.4: scattered landmasses
+  - 0.45-0.55: balanced, connected
+  - 0.6-0.7: larger, solid masses
+- `iterations` (int): Smoothing passes [1, 10]
+- `birth_limit` (int): Birth threshold [0, 8] (typically 4)
+- `death_limit` (int): Death threshold [0, 8] (typically 3)
+
+**Optional:** `seed` (int)
+
+#### PerlinNoiseGenerator
+Creates smooth heightmaps. Ideal for elevation, mountains, hills.
+
+**Required Parameters:**
+- `width` (int): Grid width [16, 512]
+- `height` (int): Grid height [16, 512]
+- `scale` (float): Noise scale [0.01, 1.0]
+  - 0.01-0.03: large, smooth features
+  - 0.04-0.08: good for mountains
+  - 0.1+: rough, detailed
+- `octaves` (int): Detail layers [1, 8]
+- `persistence` (float): Amplitude falloff [0.0, 1.0]
+
+**Optional:** `seed` (int), `lacunarity` (float, default 2.0)
+
+### Modifiers (apply after generators)
+
+#### HeightLayerModifier
+Creates discrete elevation zones.
+
+**Required Parameters:**
+- `layer_count` (int): Number of layers [1, 10]
+- `layer_heights` (list[float]): Thresholds, ascending order
+- `blend_factor` (float): Transition smoothness [0.0, 0.5]
+
+#### ScatterModifier
+Scatters objects on terrain.
+
+**Required Parameters:**
+- `object_type` (str): One of "rock", "tree", "grass_clump", "bush", "flower"
+- `density` (float): Scatter density [0.0, 1.0]
+- `valid_layers` (list[int]): Layer indices to scatter on
+
+#### GrassDetailModifier
+Adds grass coverage to a layer.
+
+**Required Parameters:**
+- `target_layer` (int): Layer index (0-indexed)
+- `coverage` (float): Coverage percentage [0.0, 1.0]
+
+---
+
+## Output Format
+
+Output the FINAL APPROVED trajectory as JSON:
+
+{
+  "final_trajectory": {
+    "trajectory_summary": "<overview>",
+    "tool_plan": [
+      {
+        "step": 1,
+        "objective": "<what this achieves>",
+        "tool_name": "<EXACT tool name>",
+        "arguments": { ... },
+        "expected_result": "<success criteria>"
+      }
+    ],
+    "risks": ["<potential issues>"]
+  }
+}
+
+---
+
+## BEGIN PROTOCOL
+
+Now execute the Dual-Agent refinement for: **$ARGUMENTS**
+
+Start with [ACTOR] generating the initial trajectory S₀.
+```
+
+</details>
+
+> 💡 사용 예제가 포함된 전체 프롬프트는 [`.opencode/command/Map.md`](.opencode/command/Map.md)를 참조하세요.
+
+---
+
 ## OpenCode 통합 (권장)
 
 **API 키 불필요!** OpenCode CLI 내에서 Dual-Agent PCG 시스템을 직접 사용할 수 있습니다.
