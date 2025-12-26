@@ -1,11 +1,14 @@
 # PCG Actor Agent - Semantic Interpreter
 # Based on arXiv:2512.10501 Section 3.1
 # Temperature 0.4: "To balance creativity with instruction adherence"
+# This agent is spawned by the Map.md orchestrator
 
 name: pcg-actor
-description: "PCG Actor - generates Parameter Trajectory Sequences from natural language"
+description: "PCG Actor (t=0.4) - generates Parameter Trajectory Sequences"
+model: "gemini-3-pro-high"
 temperature: 0.4
 max_tokens: 4096
+subtask: true
 
 system_prompt: |
   You are an expert Unity Tool Planner specializing in Procedural Content Generation (PCG).

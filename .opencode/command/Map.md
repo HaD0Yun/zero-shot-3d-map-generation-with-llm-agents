@@ -1,52 +1,83 @@
 ---
 description: "PCG map parameter generator using Dual-Agent Actor-Critic"
 argument-hint: "map description"
+model: "gemini-3-pro-high"
 ---
 
-# Dual-Agent PCG Map Generation
+# Dual-Agent PCG Orchestrator
 
-You are executing the **Zero-shot Dual-Agent PCG Refinement Protocol** (arXiv:2512.10501).
+You are the **Orchestrator** for the Zero-shot Dual-Agent PCG Refinement Protocol (arXiv:2512.10501).
 
-## User Request (P_user)
+## Your Role
+
+You MUST spawn **separate agents** using the Task tool to implement a true dual-agent loop.
+- **DO NOT** roleplay as both Actor and Critic yourself
+- **DO** use the Task tool to spawn `pcg-actor` and `pcg-critic` agents
+
+## User Request
 
 **Map Description**: $ARGUMENTS
 
 ---
 
-## Protocol
+## MANDATORY EXECUTION PROTOCOL
 
-You will alternate between two roles until convergence (max 3 iterations):
-
-### ACTOR ROLE (Semantic Interpreter)
-Generate a Parameter Trajectory Sequence as JSON. You must:
-- Translate the user's intent into specific PCG tool configurations
-- Include concrete parameter values (NO placeholders like "TBD")
-- Ground all tool names and parameters in the API Documentation below
-- Identify risks and assumptions
-
-### CRITIC ROLE (Static Verifier)  
-Review the trajectory against documentation. Apply the 5-dimension framework:
-1. **Tool Selection**: Does each tool exist exactly as named?
-2. **Parameter Correctness**: All required params present? Values in valid range?
-3. **Logic & Sequence**: Generators before modifiers? Dependencies satisfied?
-4. **Goal Alignment**: Does trajectory achieve user's requirements?
-5. **Completeness**: Any missing steps?
-
-**CONSERVATIVE POLICY**: Only flag issues you're CERTAIN about.
-
----
-
-## Execution Flow
+### Step 1: Spawn Actor Agent
+Use the Task tool to spawn the `pcg-actor` agent:
 
 ```
-1. [ACTOR] Generate initial trajectory S₀
-2. [CRITIC] Review S₀ → produce feedback
-3. IF issues found AND iteration < 3:
-   [ACTOR] Revise trajectory based on feedback → S₁
-   [CRITIC] Review S₁
-   ... repeat until approved or max iterations
-4. Output final approved trajectory
+Task(
+  subagent_type="general",
+  description="PCG Actor - Generate trajectory",
+  prompt="You are the PCG ACTOR agent (temperature 0.4). Generate a Parameter Trajectory Sequence for: [USER_REQUEST]. 
+
+API DOCUMENTATION:
+[Include full API docs below]
+
+Output ONLY valid JSON matching this schema:
+{
+  \"trajectory_summary\": \"...\",
+  \"tool_plan\": [{\"step\": 1, \"objective\": \"...\", \"tool_name\": \"...\", \"arguments\": {...}, \"expected_result\": \"...\"}],
+  \"risks\": [\"...\"]
+}"
+)
 ```
+
+### Step 2: Spawn Critic Agent
+Pass Actor's output to the Critic agent:
+
+```
+Task(
+  subagent_type="general", 
+  description="PCG Critic - Validate trajectory",
+  prompt="You are the PCG CRITIC agent (temperature 0.2). Review this trajectory against API documentation.
+
+TRAJECTORY TO REVIEW:
+[Actor's JSON output]
+
+API DOCUMENTATION:
+[Include full API docs]
+
+Apply 5-dimension review:
+1. Tool Selection - Do tools exist exactly as named?
+2. Parameter Correctness - All required params? Valid ranges?
+3. Logic & Sequence - Generators before modifiers?
+4. Goal Alignment - Does it achieve user's goal?
+5. Completeness - Any missing steps?
+
+Output ONLY valid JSON:
+{
+  \"decision\": \"approve\" or \"revise\",
+  \"blocking_issues\": [{\"step\": N, \"issue\": \"...\", \"severity\": \"critical|major\", \"suggestion\": \"...\"}],
+  \"review_notes\": \"...\"
+}"
+)
+```
+
+### Step 3: Loop Logic
+- IF `decision === "approve"` → Output final trajectory
+- IF `decision === "revise"` AND iteration < 3 → Go to Step 1 with feedback
+- IF iteration >= 3 → Output best effort trajectory
 
 ---
 
@@ -61,9 +92,6 @@ Creates organic landmass patterns. Ideal for islands, continents, caves.
 - `width` (int): Grid width [16, 256]
 - `height` (int): Grid height [16, 256]  
 - `fill_probability` (float): Initial fill [0.0, 1.0]
-  - 0.3-0.4: scattered landmasses
-  - 0.45-0.55: balanced, connected
-  - 0.6-0.7: larger, solid masses
 - `iterations` (int): Smoothing passes [1, 10]
 - `birth_limit` (int): Birth threshold [0, 8] (typically 4)
 - `death_limit` (int): Death threshold [0, 8] (typically 3)
@@ -77,9 +105,6 @@ Creates smooth heightmaps. Ideal for elevation, mountains, hills.
 - `width` (int): Grid width [16, 512]
 - `height` (int): Grid height [16, 512]
 - `scale` (float): Noise scale [0.01, 1.0]
-  - 0.01-0.03: large, smooth features
-  - 0.04-0.08: good for mountains
-  - 0.1+: rough, detailed
 - `octaves` (int): Detail layers [1, 8]
 - `persistence` (float): Amplitude falloff [0.0, 1.0]
 
@@ -88,152 +113,51 @@ Creates smooth heightmaps. Ideal for elevation, mountains, hills.
 ### Modifiers (apply after generators)
 
 #### HeightLayerModifier
-Creates discrete elevation zones.
-
-**Required Parameters:**
-- `layer_count` (int): Number of layers [1, 10]
-- `layer_heights` (list[float]): Thresholds, each in [0.0, 1.0], ascending order, length = layer_count
-- `blend_factor` (float): Transition smoothness [0.0, 0.5]
+**Required:** `layer_count` (int) [1,10], `layer_heights` (list[float]) ascending, `blend_factor` (float) [0.0, 0.5]
 
 #### ScatterModifier
-Scatters objects on terrain.
-
-**Required Parameters:**
-- `object_type` (str): One of "rock", "tree", "grass_clump", "bush", "flower"
-- `density` (float): Scatter density [0.0, 1.0]
-- `valid_layers` (list[int]): Layer indices to scatter on (0-indexed)
-
+**Required:** `object_type` (str): "rock"|"tree"|"grass_clump"|"bush"|"flower", `density` (float) [0.0, 1.0], `valid_layers` (list[int])
 **Optional:** `random_rotation` (bool), `scale_variation` (float), `min_distance` (float)
 
 #### GrassDetailModifier
-Adds grass coverage to a layer.
-
-**Required Parameters:**
-- `target_layer` (int): Layer index (0-indexed)
-- `coverage` (float): Coverage percentage [0.0, 1.0]
-
+**Required:** `target_layer` (int), `coverage` (float) [0.0, 1.0]
 **Optional:** `height_variation` (float), `color_variation` (float), `wind_response` (float)
 
 ---
 
 ## Output Format
 
-After completing the Actor-Critic loop, output the FINAL APPROVED trajectory:
+After the loop completes, output:
 
 ```json
 {
-  "protocol_log": [
-    {"role": "actor", "iteration": 0, "action": "generated initial trajectory"},
-    {"role": "critic", "iteration": 0, "decision": "revise|approve", "issues": []},
+  "execution_log": [
+    {"iteration": 0, "actor_spawned": true, "critic_spawned": true, "decision": "revise|approve"},
     ...
   ],
   "final_trajectory": {
-    "trajectory_summary": "<overview of approach, 20-200 words>",
-    "tool_plan": [
-      {
-        "step": 1,
-        "objective": "<what this step achieves>",
-        "tool_name": "<EXACT tool name from API docs>",
-        "arguments": { ... },
-        "expected_result": "<verifiable success criteria>"
-      }
-    ],
-    "risks": ["<potential issues>"]
+    "trajectory_summary": "...",
+    "tool_plan": [...],
+    "risks": [...]
   },
   "termination": {
     "reason": "approved | max_iterations",
-    "total_iterations": 1-3
+    "total_iterations": N
   }
 }
 ```
 
 ---
 
-## Usage Examples (E)
+## BEGIN ORCHESTRATION
 
-### Example 1: Simple Island
-Request: "Create a basic island"
-```json
-{
-  "trajectory_summary": "Generate island using cellular automata with moderate fill probability for connected landmass.",
-  "tool_plan": [
-    {
-      "step": 1,
-      "objective": "Create island base shape",
-      "tool_name": "CellularAutomataGenerator",
-      "arguments": {
-        "width": 64, "height": 64,
-        "fill_probability": 0.45, "iterations": 5,
-        "birth_limit": 4, "death_limit": 3
-      },
-      "expected_result": "Single connected landmass covering 40-50% of map"
-    }
-  ],
-  "risks": ["Fill probability below 0.4 may create disconnected islands"]
-}
-```
+**User Request**: $ARGUMENTS
 
-### Example 2: Mountain with Vegetation
-Request: "Mountain terrain with three elevation zones and grass on middle slopes"
-```json
-{
-  "trajectory_summary": "Create mountain using Perlin noise, height layers for zones, grass on midlands.",
-  "tool_plan": [
-    {
-      "step": 1,
-      "objective": "Generate elevation heightmap",
-      "tool_name": "PerlinNoiseGenerator",
-      "arguments": {
-        "width": 128, "height": 128,
-        "scale": 0.05, "octaves": 4, "persistence": 0.5
-      },
-      "expected_result": "Smooth heightmap with natural elevation pattern"
-    },
-    {
-      "step": 2,
-      "objective": "Apply three elevation zones",
-      "tool_name": "HeightLayerModifier",
-      "arguments": {
-        "layer_count": 3,
-        "layer_heights": [0.0, 0.4, 0.75],
-        "blend_factor": 0.1
-      },
-      "expected_result": "Three zones: lowlands (0), midlands (1), peaks (2)"
-    },
-    {
-      "step": 3,
-      "objective": "Add grass to midlands",
-      "tool_name": "GrassDetailModifier",
-      "arguments": {
-        "target_layer": 1,
-        "coverage": 0.6, "height_variation": 0.3
-      },
-      "expected_result": "Natural grass coverage on layer 1"
-    }
-  ],
-  "risks": ["Perlin scale affects roughness", "Layer indices start at 0"]
-}
-```
+NOW:
+1. Spawn the `pcg-actor` agent using Task tool
+2. Wait for Actor's trajectory output
+3. Spawn the `pcg-critic` agent with Actor's output
+4. Check Critic's decision
+5. Loop or terminate based on decision
 
----
-
-## Token Estimation
-
-Include approximate token counts in your output:
-```json
-{
-  "token_estimate": {
-    "actor_chars": <total chars from actor outputs>,
-    "critic_chars": <total chars from critic outputs>,
-    "estimated_tokens": <total_chars / 4>
-  }
-}
-```
-
----
-
-## BEGIN PROTOCOL
-
-Now execute the Dual-Agent refinement for: **$ARGUMENTS**
-
-Start with [ACTOR] generating the initial trajectory S₀.
+START by spawning the Actor agent now.

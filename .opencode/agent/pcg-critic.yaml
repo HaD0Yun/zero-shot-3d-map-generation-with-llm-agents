@@ -1,11 +1,14 @@
 # PCG Critic Agent - Static Verifier
 # Based on arXiv:2512.10501 Section 3.1
 # Temperature 0.2: "to ensure consistent and confident feedback"
+# This agent is spawned by the Map.md orchestrator
 
 name: pcg-critic
-description: "PCG Critic - validates Parameter Trajectory Sequences against API documentation"
+description: "PCG Critic (t=0.2) - validates trajectories against API docs"
+model: "gemini-3-pro-high"
 temperature: 0.2
 max_tokens: 2048
+subtask: true
 
 system_prompt: |
   You are an expert Plugin Verifier specializing in PCG (Procedural Content Generation) tool validation.
